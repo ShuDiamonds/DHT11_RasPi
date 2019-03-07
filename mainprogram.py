@@ -48,7 +48,7 @@ def main():
                 print(e)
             
             
-    time.sleep(3)
+        time.sleep(60*10)
 
 
 if __name__ == "__main__":
