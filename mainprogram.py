@@ -1,21 +1,57 @@
+#!/usr/bin/python3
+# -*- Coding: utf-8 -*-
+
 import RPi.GPIO as GPIO
 import dht11
 import time
 import datetime
+import sys
 
-# initialize GPIO
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
 
-# read data using pin 14
-instance = dht11.DHT11(pin=14)
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
 
-while True:
-    result = instance.read()
-    if result.is_valid():
-        print("Last valid input: " + str(datetime.datetime.now()))
-        print("Temperature: %d C" % result.temperature)
-        print("Humidity: %d %%" % result.humidity)
 
-time.sleep(1)
+def main():
+    
+    # initialize GPIO
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.cleanup()
+
+    # read data using pin 14
+    instance = dht11.DHT11(pin=14)
+
+
+    #init google spreadsheet
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('spreadsheet.json', scope)
+    gc = gspread.authorize(credentials)
+    workbook1 = gc.open('TemperatureAndHumidity')
+    worksheet=workbook1.sheet1
+    
+    csv_colmnsname=["time","Temperature","Humidity"]
+    
+    while True:
+        result = instance.read()
+        if result.is_valid():
+            print("Last valid input: " + datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"))
+            print("Temperature: %d C" % result.temperature)
+            print("Humidity: %d %%" % result.humidity)
+            
+            #write Google Spreadsheet
+            tmp=[datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"),result.temperature,result.humidity]
+            try:
+                worksheet.append_row(tmp)
+            except ZeroDivisionError as e:
+                print(e)
+            
+            
+    time.sleep(3)
+
+
+if __name__ == "__main__":
+    with open("debug.txt", "a") as f:
+        f.write(datetime.datetime.now().strftime("%Y_%m_%d")+":"+str(sys.version)+"\n")
+    main()

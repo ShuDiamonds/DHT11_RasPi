@@ -1,0 +1,5 @@
+*.json
+*.spec
+*.txt
+build/
+__pycache__
