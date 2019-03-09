@@ -13,7 +13,17 @@ from oauth2client.service_account import ServiceAccountCredentials
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
-
+def write_Googlespreadsheet(tmp):
+    #init google spreadsheet
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('spreadsheet.json', scope)
+    gc = gspread.authorize(credentials)
+    workbook1 = gc.open('TemperatureAndHumidity')
+    worksheet=workbook1.sheet1
+    worksheet.append_row(tmp)
+def debugprint(text):
+    with open("debug.txt", "a") as f:
+            f.write(datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
+    return
 def main():
     
     # initialize GPIO
@@ -25,11 +35,7 @@ def main():
     instance = dht11.DHT11(pin=14)
 
 
-    #init google spreadsheet
-    credentials = ServiceAccountCredentials.from_json_keyfile_name('spreadsheet.json', scope)
-    gc = gspread.authorize(credentials)
-    workbook1 = gc.open('TemperatureAndHumidity')
-    worksheet=workbook1.sheet1
+    
     
     csv_colmnsname=["time","Temperature","Humidity"]
     
@@ -43,9 +49,11 @@ def main():
             #write Google Spreadsheet
             tmp=[datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"),result.temperature,result.humidity]
             try:
-                worksheet.append_row(tmp)
+                write_Googlespreadsheet(tmp)
+                
             except ZeroDivisionError as e:
                 print(e)
+                debugprint(str(e))
             
             
         time.sleep(60*10)
@@ -54,4 +62,5 @@ def main():
 if __name__ == "__main__":
     with open("debug.txt", "a") as f:
         f.write(datetime.datetime.now().strftime("%Y_%m_%d")+":"+str(sys.version)+"\n")
+    time.sleep(20)
     main()
