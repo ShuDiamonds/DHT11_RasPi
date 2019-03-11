@@ -22,10 +22,10 @@ def write_Googlespreadsheet(tmp):
     worksheet=workbook1.sheet1
     worksheet.append_row(tmp)
 def debugprint(text):
-	print(datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
-	with open("debug.txt", "a") as f:
-			f.write(datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
-	return
+    print(datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
+    with open("debug.txt", "a") as f:
+            f.write(datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
+    return
 def main():
     
     # initialize GPIO
@@ -42,10 +42,10 @@ def main():
     csv_colmnsname=["time","Temperature","Humidity"]
     
     while True:
-    	for i in range(5):
-			result = instance.read()
-			if result.is_valid():
-				break
+        for i in range(20):
+            result = instance.read()
+            if result.is_valid():
+                break
         
         if result.is_valid():
             print("Last valid input: " + datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"))
@@ -55,15 +55,16 @@ def main():
             #write Google Spreadsheet
             tmp=[datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"),result.temperature,result.humidity]
             try:
-                write_Googlespreadsheet(tmp)
+                #write_Googlespreadsheet(tmp)
+                pass
                 
             except ZeroDivisionError as e:
                 print(e)
                 debugprint(str(e))
         else :
-          	debugprint("sensor read data was invalid")
+            debugprint("sensor read data was invalid")
            
-        time.sleep(6)
+        time.sleep(60*10)
 
 
 if __name__ == "__main__":
