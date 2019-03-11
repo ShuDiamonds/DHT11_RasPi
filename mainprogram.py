@@ -18,7 +18,7 @@ def write_Googlespreadsheet(tmp):
     #init google spreadsheet
     credentials = ServiceAccountCredentials.from_json_keyfile_name('spreadsheet.json', scope)
     gc = gspread.authorize(credentials)
-    workbook1 = gc.open(gcfilename)
+    workbook1 = gc.open(piSETTING.gcfilename)
     worksheet=workbook1.sheet1
     worksheet.append_row(tmp)
 def debugprint(text):
