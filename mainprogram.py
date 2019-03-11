@@ -22,9 +22,10 @@ def write_Googlespreadsheet(tmp):
     worksheet=workbook1.sheet1
     worksheet.append_row(tmp)
 def debugprint(text):
-    with open("debug.txt", "a") as f:
-            f.write(datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
-    return
+	print(datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
+	with open("debug.txt", "a") as f:
+			f.write(datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S ")+text+"\n")
+	return
 def main():
     
     # initialize GPIO
@@ -41,7 +42,11 @@ def main():
     csv_colmnsname=["time","Temperature","Humidity"]
     
     while True:
-        result = instance.read()
+    	for i in range(5):
+			result = instance.read()
+			if result.is_valid():
+				break
+        
         if result.is_valid():
             print("Last valid input: " + datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"))
             print("Temperature: %d C" % result.temperature)
@@ -55,9 +60,10 @@ def main():
             except ZeroDivisionError as e:
                 print(e)
                 debugprint(str(e))
-            
-            
-        time.sleep(60*10)
+        else :
+          	debugprint("sensor read data was invalid")
+           
+        time.sleep(6)
 
 
 if __name__ == "__main__":
