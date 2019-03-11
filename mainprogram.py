@@ -6,6 +6,7 @@ import dht11
 import time
 import datetime
 import sys
+import piSETTING
 
 
 import gspread
@@ -17,7 +18,7 @@ def write_Googlespreadsheet(tmp):
     #init google spreadsheet
     credentials = ServiceAccountCredentials.from_json_keyfile_name('spreadsheet.json', scope)
     gc = gspread.authorize(credentials)
-    workbook1 = gc.open('TemperatureAndHumidity')
+    workbook1 = gc.open(gcfilename)
     worksheet=workbook1.sheet1
     worksheet.append_row(tmp)
 def debugprint(text):
