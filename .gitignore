@@ -1,5 +1,6 @@
 *.json
 *.spec
 *.txt
+piSETTING.py
 build/
 __pycache__
