@@ -34,12 +34,12 @@ def main():
     GPIO.cleanup()
 
     # read data using pin 14
-    #instance = dht11.DHT11(pin=14)
+    instance = dht11.DHT11(pin=14)
 
 
     
     
-    csv_colmnsname=["time","Temperature","Humidity"]
+    #csv_colmnsname=["time","Temperature","Humidity"]
     
     while True:
         for i in range(20):
