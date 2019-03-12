@@ -34,7 +34,7 @@ def main():
     GPIO.cleanup()
 
     # read data using pin 14
-    instance = dht11.DHT11(pin=14)
+    #instance = dht11.DHT11(pin=14)
 
 
     
@@ -55,7 +55,7 @@ def main():
             #write Google Spreadsheet
             tmp=[datetime.datetime.now().strftime("%Y_%m_%d %H:%M:%S"),result.temperature,result.humidity]
             try:
-                #write_Googlespreadsheet(tmp)
+                write_Googlespreadsheet(tmp)
                 pass
                 
             except ZeroDivisionError as e:
